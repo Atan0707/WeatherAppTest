@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import speed from './speed.jpg';
 
 function App() {
+  const [location, setLocation] = useState('');
+  const [data, setData] = useState(null);
+
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0077838c5dfb9b3df1fe49f6202fe45a`;
+
+  const fetchData = async () => {
+    const response = await fetch(url);
+    const data = await response.json();
+    setData(data);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLocation(e.target.elements[0].value);
+    fetchData();
+  };
+
+  const convertToCelsius = (kelvin) => {
+    return (kelvin - 273.15).toFixed(2);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Weather app</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={location} onChange={e => setLocation(e.target.value)} />
+        <button type="submit">Search</button>
+      </form>
+
+      {data && data.main ? <h1>Temperature: {convertToCelsius(data.main.temp)}°C</h1> : null}
+      {data && data.weather ? <h1>Weather: {data.weather[0].description}</h1> : null}
+      {data && data.main ? <h1>Humidity: {data.main.humidity}%</h1> : null}
+      {data && data.main ? <h1>Min Temp: {convertToCelsius(data.main.temp_min)}°C</h1> : null}
+      {data && data.main ? <h1>Max Temp: {convertToCelsius(data.main.temp_max)}°C</h1> : null}
+
+      <img src={speed} alt="speed"></img>
     </div>
   );
 }
