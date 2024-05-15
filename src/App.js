@@ -5,7 +5,7 @@ function App() {
   const [location, setLocation] = useState('');
   const [data, setData] = useState(null);
 
-  const url = `http://api.openweathermap.org/data/2.5/weather?q=${location}&appid=0077838c5dfb9b3df1fe49f6202fe45a`;
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${location}&appid={url}`;
 
   const fetchData = async () => {
     const response = await fetch(url);
